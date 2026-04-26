@@ -1,0 +1,28 @@
+{
+  "name": "App Restaurante",
+  "short_name": "Restaurante",
+  "description": "PWA de gerenciamento de estoque e movimentação diária",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/vite.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "splash_screens": [
+    {
+      "src": "/vite.svg",
+      "sizes": "640x1136",
+      "type": "image/svg+xml"
+    }
+  ]
+}
