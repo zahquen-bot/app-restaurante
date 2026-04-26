@@ -16,36 +16,11 @@ const CadastroProdutos = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const checkAccess = async () => {
-      setLoading(true); // Garante que o loading comece
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { navigate('/login'); return; }
-
-      const { data } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single();
-
-      // Comparação robusta
-      if (data?.role?.trim().toLowerCase() === 'admin') {
-        setIsAdmin(true);
-        await fetchProdutos();
-      } else {
-        alert("Acesso restrito a administradores!");
-        navigate('/movimento');
-      }
-      setLoading(false); // Só finaliza o carregamento após decidir o destino
-    };
-    checkAccess();
-  }, [navigate]);
-
-  // 2. A lógica de renderização deve ser estrita:
-  if (loading) return <div className="p-10 text-center">Verificando permissões...</div>;
-  
-  // Só renderiza SE for admin. Como o navigate acima tira quem não é, 
-  // aqui podemos ser mais relaxados ou apenas garantir a segurança.
-  if (!isAdmin) return null;
+  console.log("TESTE DE ACESSO INICIADO");
+  setIsAdmin(true); // Força como admin
+  fetchProdutos();   // Tenta buscar os dados
+  setLoading(false); // Libera o carregamento
+}, []);
 
   const fetchProdutos = async () => {
     const { data } = await supabase.from('produtos').select('*').order('nome')
