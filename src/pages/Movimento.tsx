@@ -199,7 +199,7 @@ const Movimento = () => {
   )}
 </div>
 
-      {isAdmin && (
+      {!isAdmin && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 shrink-0">
           <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
             <p className="text-gray-500 text-xs uppercase font-bold">Total em Dinheiro</p>
