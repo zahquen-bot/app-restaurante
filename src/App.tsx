@@ -12,22 +12,17 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<User | null>(null)
 
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      setUser(session?.user || null)
-      setLoading(false)
-    }
-    checkUser()
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
-        setUser(session?.user || null)
-      }
-    })
-
-    return () => subscription.unsubscribe()
-  }, [])
+const CadastroProdutos = () => {
+  // REMOVA TODO O USEEFFECT DE CHECAGEM
+  // Remova o navigate('/movimento')
+  
+  // Apenas renderize a tabela
+  return (
+    <div className="max-w-4xl mx-auto p-6...">
+       {/* SEU HTML AQUI */}
+    </div>
+  )
+}
 
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-600">Carregando...</div>
   
