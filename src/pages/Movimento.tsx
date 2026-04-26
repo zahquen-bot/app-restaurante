@@ -99,7 +99,7 @@ const Movimento = () => {
   }, [movimentos, filtroProd, filtroTipo, filtroPagto, filtroData])
 
   return (
-    <div className="max-w-5xl mx-auto p-6 flex flex-col h-[90vh]">
+    <div className="max-w-5xl mx-auto p-6 flex flex-col h-auto min-h-screen">
       <div className="flex gap-2 mb-4 overflow-x-auto pb-2 shrink-0">
         {favoritos.map(f => (
           <button key={f.id} onClick={() => registrar(f.id, 1)} className="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow whitespace-nowrap">
@@ -196,7 +196,7 @@ const Movimento = () => {
         )}
 </div>
 
-      {!isAdmin && (
+      {isAdmin && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 shrink-0">
           <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
             <p className="text-gray-500 text-xs uppercase font-bold">Total em Dinheiro</p>
