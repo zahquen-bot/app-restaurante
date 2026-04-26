@@ -199,8 +199,8 @@ const Movimento = () => {
   )}
 </div>
 
-      {!isAdmin && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 shrink-0">
+      {isAdmin && (
+        <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 shrink-0">
           <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
             <p className="text-gray-500 text-xs uppercase font-bold">Total em Dinheiro</p>
             <p className="text-2xl font-bold text-green-600">R$ {movimentosFiltrados.filter(m => m.forma_pagto === 'dinheiro').reduce((acc, m) => acc + (m.quantidade * (produtos.find(p => p.id === m.produto_id)?.preco_venda || 0)), 0).toFixed(2)}</p>
