@@ -178,12 +178,47 @@ const Movimento = () => {
 </div>
 {/* --- FIM DA ÁREA DO FORMULÁRIO CORRIGIDA --- */}
 
-      <div className="flex gap-2 mb-4 shrink-0 text-sm">
-        <input type="date" value={filtroData} onChange={e => setFiltroData(e.target.value)} className="border p-1 rounded-lg bg-gray-50" />
-        <select value={filtroProd} onChange={e => setFiltroProd(e.target.value)} className="border p-1 rounded-lg bg-gray-50"><option value="">Prod</option>{produtosOrdenados.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}</select>
-        <select value={filtroTipo} onChange={e => setFiltroTipo(e.target.value)} className="border p-1 rounded-lg bg-gray-50"><option value="">Tipo</option><option value="balcao">Balcão</option><option value="delivery">Delivery</option></select>
-        <select value={filtroPagto} onChange={e => setFiltroPagto(e.target.value)} className="border p-1 rounded-lg bg-gray-50"><option value="">Pagto</option><option value="dinheiro">Dinheiro</option><option value="pix">Pix</option><option value="cartao">Cartão</option></select>
-      </div>
+      {/* Ajuste na DIV dos Filtros */}
+<div className="flex gap-2 mb-4 overflow-x-auto pb-2 shrink-0 text-sm whitespace-nowrap">
+  
+  <input 
+    type="date" 
+    value={filtroData} 
+    onChange={e => setFiltroData(e.target.value)} 
+    className="border p-2 rounded-lg bg-gray-50 shrink-0" 
+  />
+  
+  <select 
+    value={filtroProd} 
+    onChange={e => setFiltroProd(e.target.value)} 
+    className="border p-2 rounded-lg bg-gray-50 shrink-0"
+  >
+    <option value="">Prod</option>
+    {produtosOrdenados.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}
+  </select>
+  
+  <select 
+    value={filtroTipo} 
+    onChange={e => setFiltroTipo(e.target.value)} 
+    className="border p-2 rounded-lg bg-gray-50 shrink-0"
+  >
+    <option value="">Tipo</option>
+    <option value="balcao">Balcão</option>
+    <option value="delivery">Delivery</option>
+  </select>
+  
+  <select 
+    value={filtroPagto} 
+    onChange={e => setFiltroPagto(e.target.value)} 
+    className="border p-2 rounded-lg bg-gray-50 shrink-0"
+  >
+    <option value="">Pagto</option>
+    <option value="dinheiro">Dinheiro</option>
+    <option value="pix">Pix</option>
+    <option value="cartao">Cartão</option>
+  </select>
+  
+</div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col flex-grow min-h-0">
   {/* Adicionado overflow-x-auto abaixo */}
