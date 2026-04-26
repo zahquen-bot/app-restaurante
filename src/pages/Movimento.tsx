@@ -98,48 +98,106 @@ const Movimento = () => {
     })
   }, [movimentos, filtroProd, filtroTipo, filtroPagto, filtroData])
 
+  return (
+    <div className="max-w-5xl mx-auto p-6 flex flex-col h-[90vh]">
+      <div className="flex gap-2 mb-4 overflow-x-auto pb-2 shrink-0">
+        {favoritos.map(f => (
+          <button key={f.id} onClick={() => registrar(f.id, 1)} className="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow whitespace-nowrap">
+            {f.nome}
+          </button>
+        ))}
+      </div>
+
+      <div className="bg-blue-50 p-4 rounded-xl shadow-sm border-2 border-blue-200 mb-4 flex gap-2 flex-wrap items-center shrink-0">
+        <select onChange={e => setProdutoId(e.target.value)} className="w-1/4 border p-2 rounded-lg text-sm" value={produtoId}>
+          <option value="">Produto...</option>
+          {produtosOrdenados.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}
+        </select>
+        <input type="number" value={qtd} onChange={e => setQtd(e.target.value)} className="w-16 border p-2 rounded-lg text-sm" />
+        <select onChange={e => setModalidade(e.target.value)} className="border p-2 rounded-lg text-sm" value={modalidade}>
+          <option value="balcao">Balcão</option><option value="delivery">Delivery</option>
+        </select>
+        <select onChange={e => setPagto(e.target.value)} className="border p-2 rounded-lg text-sm" value={pagto}>
+          <option value="dinheiro">Dinheiro</option><option value="pix">Pix</option><option value="cartao">Cartão</option>
+        </select>
+        <input placeholder="Obs..." value={observacao} onChange={e => setObservacao(e.target.value)} className="flex-1 border p-2 rounded-lg text-sm" />
+        <button onClick={() => registrar(produtoId)} className="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold text-sm">Registrar</button>
+      </div>
+
+      <div className="flex gap-2 mb-4 shrink-0 text-sm">
+        <input type="date" value={filtroData} onChange={e => setFiltroData(e.target.value)} className="border p-1 rounded-lg bg-gray-50" />
+        <select value={filtroProd} onChange={e => setFiltroProd(e.target.value)} className="border p-1 rounded-lg bg-gray-50"><option value="">Prod</option>{produtosOrdenados.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}</select>
+        <select value={filtroTipo} onChange={e => setFiltroTipo(e.target.value)} className="border p-1 rounded-lg bg-gray-50"><option value="">Tipo</option><option value="balcao">Balcão</option><option value="delivery">Delivery</option></select>
+        <select value={filtroPagto} onChange={e => setFiltroPagto(e.target.value)} className="border p-1 rounded-lg bg-gray-50"><option value="">Pagto</option><option value="dinheiro">Dinheiro</option><option value="pix">Pix</option><option value="cartao">Cartão</option></select>
+      </div>
+
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden w-full">
   
+  {/* A DIV DE ROLAGEM: definimos uma largura máxima e permitimos scroll */}
+  <div className="w-full bg-white rounded-xl shadow-sm border border-gray-200 mt-4">
+  <div className="w-full overflow-x-auto">
+    <table className="w-full text-left text-sm border-collapse">
+      <thead className="bg-gray-50 border-b">
+        <tr>
+          <th className="p-3">Produto</th>
+          <th className="p-3">Qtd</th>
+          <th className="p-3">Tipo</th>
+          <th className="p-3">Pagto</th>
+          <th className="p-3">Obs</th>
+          <th className="p-3">Data</th>
+          <th className="p-3 text-right">Ação</th>
+        </tr>
+      </thead>
+      <tbody className="divide-y divide-gray-200">
+        {movimentosFiltrados.map(m => (
+          <tr key={m.id} className="hover:bg-gray-50 text-gray-700">
+            <td className="p-3 whitespace-nowrap">{produtos.find(p => p.id === m.produto_id)?.nome}</td>
+            <td className="p-3">{m.quantidade}</td>
+            <td className="p-3">
+              <select value={m.modalidade} onChange={(e) => atualizarMovimento(m.id, 'modalidade', e.target.value)} className="bg-transparent text-sm">
+                <option value="balcao">Balcão</option>
+                <option value="delivery">Delivery</option>
+              </select>
+            </td>
+            <td className="p-3">
+              <select value={m.forma_pagto} onChange={(e) => atualizarMovimento(m.id, 'forma_pagto', e.target.value)} className="bg-transparent text-sm">
+                <option value="dinheiro">Dinheiro</option>
+                <option value="pix">Pix</option>
+                <option value="cartao">Cartão</option>
+              </select>
+            </td>
+            <td className="p-3">
+              <input 
+                value={m.observacao || ''} 
+                onChange={(e) => { const newMovs = movimentos.map(mov => mov.id === m.id ? {...mov, observacao: e.target.value} : mov); setMovimentos(newMovs); }} 
+                onBlur={(e) => atualizarMovimento(m.id, 'observacao', e.target.value)} 
+                className="bg-transparent w-20 border-b border-gray-300 text-sm" 
+              />
+            </td>
+            <td className="p-3 text-xs whitespace-nowrap">{new Date(m.data).toLocaleDateString()}</td>
+            <td className="p-3 text-right">
+              <button onClick={() => excluirMovimento(m.id)} className="text-red-600 font-bold text-xs bg-red-50 px-2 py-1 rounded">Excluir</button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
+        
+        {isAdmin && (
+            <div className="bg-gray-100 border-t p-3 font-bold flex justify-between shrink-0 text-sm">
+            <span>TOTAIS ({movimentosFiltrados.length})</span>
+            <span>
+                Qtd: {movimentosFiltrados.reduce((acc, m) => acc + (Number(m.quantidade) || 0), 0)} | 
+                Valor: R$ {movimentosFiltrados.reduce((acc, m) => acc + (m.quantidade * (produtos.find(p => p.id === m.produto_id)?.preco_venda || 0)), 0).toFixed(2)}
+            </span>
+            </div>
+        )}
+</div>
 
-
-
-return (
-  <div className="max-w-5xl mx-auto p-4 md:p-6">
-    {/* Favoritos */}
-    <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
-      {favoritos.map(f => (
-        <button key={f.id} onClick={() => registrar(f.id, 1)} className="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow whitespace-nowrap">
-          {f.nome}
-        </button>
-      ))}
-    </div>
-
-    {/* Filtros e Inputs - SEM HEIGHT FIXO */}
-    <div className="bg-blue-50 p-4 rounded-xl shadow-sm border-2 border-blue-200 mb-4 flex flex-col md:flex-row gap-2">
-       {/* ... (seus selects e inputs aqui) ... */}
-       <button onClick={() => registrar(produtoId)} className="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold text-sm">Registrar</button>
-    </div>
-
-    {/* GRID SEM FLEX-GROW OU HEIGHTS FIXOS */}
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-x-auto mb-6">
-      <table className="w-full min-w-[700px] text-left text-sm">
-        <thead className="bg-gray-50 border-b">
-          <tr><th className="p-4">Produto</th><th className="p-4">Qtd</th><th className="p-4">Ação</th></tr>
-        </thead>
-        <tbody>
-          {movimentosFiltrados.map(m => (
-            <tr key={m.id} className="border-b">
-              <td className="p-4">{produtos.find(p => p.id === m.produto_id)?.nome}</td>
-              <td className="p-4">{m.quantidade}</td>
-              <td className="p-4"><button onClick={() => excluirMovimento(m.id)}>Excluir</button></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-
-    {/* TOTAIS */}
-    {isAdmin && (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 shrink-0">
+      {!isAdmin && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 shrink-0">
           <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
             <p className="text-gray-500 text-xs uppercase font-bold">Total em Dinheiro</p>
             <p className="text-2xl font-bold text-green-600">R$ {movimentosFiltrados.filter(m => m.forma_pagto === 'dinheiro').reduce((acc, m) => acc + (m.quantidade * (produtos.find(p => p.id === m.produto_id)?.preco_venda || 0)), 0).toFixed(2)}</p>
@@ -153,9 +211,9 @@ return (
             <p className="text-2xl font-bold text-purple-600">R$ {movimentosFiltrados.filter(m => m.forma_pagto === 'cartao').reduce((acc, m) => acc + (m.quantidade * (produtos.find(p => p.id === m.produto_id)?.preco_venda || 0)), 0).toFixed(2)}</p>
           </div>
         </div>
-    )}
-  </div>
-)
+      )}
+    </div>
+  )
 }
 
 export default Movimento
