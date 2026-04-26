@@ -132,33 +132,72 @@ const Movimento = () => {
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col flex-grow min-h-0">
-        <div className="overflow-y-auto flex-grow">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-gray-50 border-b sticky top-0 z-10">
-              <tr><th className="p-4">Produto</th><th className="p-4">Qtd</th><th className="p-4">Tipo</th><th className="p-4">Pagto</th><th className="p-4">Obs</th><th className="p-4">Data/Hora</th><th className="p-4 text-right">Ação</th></tr>
-            </thead>
-            <tbody>
-              {movimentosFiltrados.map(m => (
-                <tr key={m.id} className="border-b hover:bg-gray-50 text-gray-700">
-                  <td className="p-4">{produtos.find(p => p.id === m.produto_id)?.nome}</td>
-                  <td className="p-4">{m.quantidade}</td>
-                  <td className="p-4"><select value={m.modalidade} onChange={(e) => atualizarMovimento(m.id, 'modalidade', e.target.value)} className="bg-transparent cursor-pointer"><option value="balcao">Balcão</option><option value="delivery">Delivery</option></select></td>
-                  <td className="p-4"><select value={m.forma_pagto} onChange={(e) => atualizarMovimento(m.id, 'forma_pagto', e.target.value)} className="bg-transparent cursor-pointer"><option value="dinheiro">Dinheiro</option><option value="pix">Pix</option><option value="cartao">Cartão</option></select></td>
-                  <td className="p-4"><textarea value={m.observacao || ''} onChange={(e) => { const newMovs = movimentos.map(mov => mov.id === m.id ? {...mov, observacao: e.target.value} : mov); setMovimentos(newMovs); }} onBlur={(e) => atualizarMovimento(m.id, 'observacao', e.target.value)} className="bg-transparent w-full border-none focus:ring-1 focus:ring-blue-500 rounded p-1 text-sm resize-none overflow-hidden" rows={1} onFocus={(e) => e.target.rows = 3} onBlur={(e) => e.target.rows = 1} /></td>
-                  <td className="p-4 font-mono text-gray-500">{new Date(m.data).toLocaleString('pt-BR')}</td>
-                  <td className="p-4 text-right"><button onClick={() => excluirMovimento(m.id)} className="px-3 py-1 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100 font-bold transition-colors">Excluir</button></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {isAdmin && (
-          <div className="bg-gray-100 border-t p-3 font-bold flex justify-between shrink-0 text-sm">
-            <span>TOTAIS ({movimentosFiltrados.length})</span>
-            <span>Qtd: {movimentosFiltrados.reduce((acc, m) => acc + (Number(m.quantidade) || 0), 0)} | Valor: R$ {movimentosFiltrados.reduce((acc, m) => acc + (m.quantidade * (produtos.find(p => p.id === m.produto_id)?.preco_venda || 0)), 0).toFixed(2)}</span>
-          </div>
-        )}
-      </div>
+  {/* Adicionado overflow-x-auto abaixo */}
+  <div className="overflow-y-auto flex-grow overflow-x-auto">
+    {/* Adicionado min-w-[650px] abaixo */}
+    <table className="w-full min-w-[650px] text-left text-sm">
+      <thead className="bg-gray-50 border-b sticky top-0 z-10">
+        <tr>
+          <th className="p-4">Produto</th>
+          <th className="p-4">Qtd</th>
+          <th className="p-4">Tipo</th>
+          <th className="p-4">Pagto</th>
+          <th className="p-4">Obs</th>
+          <th className="p-4">Data/Hora</th>
+          <th className="p-4 text-right">Ação</th>
+        </tr>
+      </thead>
+      <tbody>
+        {movimentosFiltrados.map(m => (
+          <tr key={m.id} className="border-b hover:bg-gray-50 text-gray-700">
+            <td className="p-4 whitespace-nowrap">{produtos.find(p => p.id === m.produto_id)?.nome}</td>
+            <td className="p-4">{m.quantidade}</td>
+            <td className="p-4">
+              <select value={m.modalidade} onChange={(e) => atualizarMovimento(m.id, 'modalidade', e.target.value)} className="bg-transparent cursor-pointer">
+                <option value="balcao">Balcão</option>
+                <option value="delivery">Delivery</option>
+              </select>
+            </td>
+            <td className="p-4">
+              <select value={m.forma_pagto} onChange={(e) => atualizarMovimento(m.id, 'forma_pagto', e.target.value)} className="bg-transparent cursor-pointer">
+                <option value="dinheiro">Dinheiro</option>
+                <option value="pix">Pix</option>
+                <option value="cartao">Cartão</option>
+              </select>
+            </td>
+            <td className="p-4">
+              <textarea 
+                value={m.observacao || ''} 
+                onChange={(e) => { const newMovs = movimentos.map(mov => mov.id === m.id ? {...mov, observacao: e.target.value} : mov); setMovimentos(newMovs); }} 
+                onBlur={(e) => atualizarMovimento(m.id, 'observacao', e.target.value)} 
+                className="bg-transparent w-full min-w-[100px] border-none focus:ring-1 focus:ring-blue-500 rounded p-1 text-sm resize-none overflow-hidden" 
+                rows={1} 
+                onFocus={(e) => e.target.rows = 3} 
+                onBlur={(e) => e.target.rows = 1} 
+              />
+            </td>
+            <td className="p-4 font-mono text-gray-500 whitespace-nowrap">{new Date(m.data).toLocaleString('pt-BR')}</td>
+            <td className="p-4 text-right">
+              <button onClick={() => excluirMovimento(m.id)} className="px-3 py-1 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100 font-bold transition-colors">
+                Excluir
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  
+  {isAdmin && (
+    <div className="bg-gray-100 border-t p-3 font-bold flex justify-between shrink-0 text-sm">
+      <span>TOTAIS ({movimentosFiltrados.length})</span>
+      <span>
+        Qtd: {movimentosFiltrados.reduce((acc, m) => acc + (Number(m.quantidade) || 0), 0)} | 
+        Valor: R$ {movimentosFiltrados.reduce((acc, m) => acc + (m.quantidade * (produtos.find(p => p.id === m.produto_id)?.preco_venda || 0)), 0).toFixed(2)}
+      </span>
+    </div>
+  )}
+</div>
 
       {isAdmin && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 shrink-0">
