@@ -178,26 +178,29 @@ const Movimento = () => {
 </div>
 {/* --- FIM DA ÁREA DO FORMULÁRIO CORRIGIDA --- */}
 
-      <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-2 shrink-0 text-sm whitespace-nowrap">
+      {/* Container Principal que agrupa label + área de filtros */}
+<div className="flex items-center gap-3 mb-4 shrink-0 text-sm">
   
-  {/* Label fixo no início */}
-  <span className="font-bold text-gray-700 mr-1">Filtros:</span>
+  {/* Label fixo (fora da rolagem) */}
+  <span className="font-bold text-gray-700 min-w-[50px]">Filtros:</span>
   
-  <input 
-    type="date" 
-    value={filtroData} 
-    onChange={e => setFiltroData(e.target.value)} 
-    className="border p-2 rounded-lg bg-gray-50 shrink-0" 
-  />
-  
-  <select 
-    value={filtroProd} 
-    onChange={e => setFiltroProd(e.target.value)} 
-    className="border p-2 rounded-lg bg-gray-50 shrink-0"
-  >
-    <option value="">Prod</option>
-    {produtosOrdenados.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}
-  </select>
+  {/* Área de rolagem (apenas os campos) */}
+  <div className="flex gap-2 overflow-x-auto pb-2 whitespace-nowrap">
+    <input 
+      type="date" 
+      value={filtroData} 
+      onChange={e => setFiltroData(e.target.value)} 
+      className="border p-2 rounded-lg bg-gray-50 shrink-0" 
+    />
+    
+    <select 
+      value={filtroProd} 
+      onChange={e => setFiltroProd(e.target.value)} 
+      className="border p-2 rounded-lg bg-gray-50 shrink-0"
+    >
+      <option value="">Prod</option>
+      {produtosOrdenados.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}
+    </select>
   
   <select 
     value={filtroTipo} 
@@ -219,7 +222,7 @@ const Movimento = () => {
     <option value="pix">Pix</option>
     <option value="cartao">Cartão</option>
   </select>
-  
+  </div>
 </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col flex-grow min-h-0">
