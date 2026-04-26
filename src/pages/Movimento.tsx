@@ -134,34 +134,50 @@ const Movimento = () => {
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden w-full">
   
   {/* A DIV DE ROLAGEM: definimos uma largura máxima e permitimos scroll */}
+  <div className="w-full bg-white rounded-xl shadow-sm border border-gray-200 mt-4">
   <div className="w-full overflow-x-auto">
-    
-    <table className="w-full min-w-[700px] text-left text-sm">
+    <table className="w-full text-left text-sm border-collapse">
       <thead className="bg-gray-50 border-b">
         <tr>
-          <th className="p-4">Produto</th>
-          <th className="p-4">Qtd</th>
-          <th className="p-4">Tipo</th>
-          <th className="p-4">Pagto</th>
-          <th className="p-4">Obs</th>
-          <th className="p-4">Data/Hora</th>
-          <th className="p-4 text-right">Ação</th>
+          <th className="p-3">Produto</th>
+          <th className="p-3">Qtd</th>
+          <th className="p-3">Tipo</th>
+          <th className="p-3">Pagto</th>
+          <th className="p-3">Obs</th>
+          <th className="p-3">Data</th>
+          <th className="p-3 text-right">Ação</th>
         </tr>
       </thead>
-      
-      {/* AQUI ESTÁ A MUDANÇA: removemos restrições de flexbox para garantir que o tbody renderize */}
       <tbody className="divide-y divide-gray-200">
         {movimentosFiltrados.map(m => (
           <tr key={m.id} className="hover:bg-gray-50 text-gray-700">
-            <td className="p-4">{produtos.find(p => p.id === m.produto_id)?.nome}</td>
-            <td className="p-4">{m.quantidade}</td>
-            <td className="p-4"><select value={m.modalidade} onChange={(e) => atualizarMovimento(m.id, 'modalidade', e.target.value)} className="bg-transparent">{/* ... options ... */}</select></td>
-            <td className="p-4"><select value={m.forma_pagto} onChange={(e) => atualizarMovimento(m.id, 'forma_pagto', e.target.value)} className="bg-transparent">{/* ... options ... */}</select></td>
-            <td className="p-4">
-               <textarea value={m.observacao || ''} onChange={(e) => { const newMovs = movimentos.map(mov => mov.id === m.id ? {...mov, observacao: e.target.value} : mov); setMovimentos(newMovs); }} onBlur={(e) => atualizarMovimento(m.id, 'observacao', e.target.value)} className="bg-transparent w-20 border-none" rows={1} />
+            <td className="p-3 whitespace-nowrap">{produtos.find(p => p.id === m.produto_id)?.nome}</td>
+            <td className="p-3">{m.quantidade}</td>
+            <td className="p-3">
+              <select value={m.modalidade} onChange={(e) => atualizarMovimento(m.id, 'modalidade', e.target.value)} className="bg-transparent text-sm">
+                <option value="balcao">Balcão</option>
+                <option value="delivery">Delivery</option>
+              </select>
             </td>
-            <td className="p-4 text-xs">{new Date(m.data).toLocaleString('pt-BR')}</td>
-            <td className="p-4 text-right"><button onClick={() => excluirMovimento(m.id)} className="text-red-600 font-bold">Excluir</button></td>
+            <td className="p-3">
+              <select value={m.forma_pagto} onChange={(e) => atualizarMovimento(m.id, 'forma_pagto', e.target.value)} className="bg-transparent text-sm">
+                <option value="dinheiro">Dinheiro</option>
+                <option value="pix">Pix</option>
+                <option value="cartao">Cartão</option>
+              </select>
+            </td>
+            <td className="p-3">
+              <input 
+                value={m.observacao || ''} 
+                onChange={(e) => { const newMovs = movimentos.map(mov => mov.id === m.id ? {...mov, observacao: e.target.value} : mov); setMovimentos(newMovs); }} 
+                onBlur={(e) => atualizarMovimento(m.id, 'observacao', e.target.value)} 
+                className="bg-transparent w-20 border-b border-gray-300 text-sm" 
+              />
+            </td>
+            <td className="p-3 text-xs whitespace-nowrap">{new Date(m.data).toLocaleDateString()}</td>
+            <td className="p-3 text-right">
+              <button onClick={() => excluirMovimento(m.id)} className="text-red-600 font-bold text-xs bg-red-50 px-2 py-1 rounded">Excluir</button>
+            </td>
           </tr>
         ))}
       </tbody>
