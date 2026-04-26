@@ -31,7 +31,7 @@ const CadastroProdutos = () => {
         .eq('id', user.id)
         .single()
 
-      if (data?.role === 'admin') {
+      if (data?.role && data.role.trim().toLowerCase() === 'admin') {
         setIsAdmin(true)
         await fetchProdutos() // O 'await' aqui é a chave!
       } else {
