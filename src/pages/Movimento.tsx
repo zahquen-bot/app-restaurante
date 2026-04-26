@@ -178,8 +178,10 @@ const Movimento = () => {
 </div>
 {/* --- FIM DA ÁREA DO FORMULÁRIO CORRIGIDA --- */}
 
-      {/* Ajuste na DIV dos Filtros */}
-<div className="flex gap-2 mb-4 overflow-x-auto pb-2 shrink-0 text-sm whitespace-nowrap">
+      <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-2 shrink-0 text-sm whitespace-nowrap">
+  
+  {/* Label fixo no início */}
+  <span className="font-bold text-gray-700 mr-1">Filtros:</span>
   
   <input 
     type="date" 
