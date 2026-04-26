@@ -16,11 +16,29 @@ const CadastroProdutos = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-  console.log("TESTE DE ACESSO INICIADO");
-  setIsAdmin(true); // Força como admin
-  fetchProdutos();   // Tenta buscar os dados
-  setLoading(false); // Libera o carregamento
-}, []);
+    const checkAccess = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { navigate('/login'); return; }
+
+      const { data } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      // Verificação direta
+      if (data?.role?.trim().toLowerCase() === 'admin') {
+        console.log("Acesso concedido para admin");
+        setIsAdmin(true);
+        fetchProdutos();
+        setLoading(false);
+      } else {
+        console.log("Acesso negado, redirecionando...");
+        navigate('/movimento');
+      }
+    };
+    checkAccess();
+  }, []); // Removi o [navigate] para evitar loops
 
   const fetchProdutos = async () => {
     const { data } = await supabase.from('produtos').select('*').order('nome')
