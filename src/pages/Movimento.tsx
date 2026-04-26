@@ -108,21 +108,75 @@ const Movimento = () => {
         ))}
       </div>
 
-      <div className="bg-blue-50 p-4 rounded-xl shadow-sm border-2 border-blue-200 mb-4 flex gap-2 flex-wrap items-center shrink-0">
-        <select onChange={e => setProdutoId(e.target.value)} className="w-1/4 border p-2 rounded-lg text-sm" value={produtoId}>
-          <option value="">Produto...</option>
-          {produtosOrdenados.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}
-        </select>
-        <input type="number" value={qtd} onChange={e => setQtd(e.target.value)} className="w-16 border p-2 rounded-lg text-sm" />
-        <select onChange={e => setModalidade(e.target.value)} className="border p-2 rounded-lg text-sm" value={modalidade}>
-          <option value="balcao">Balcão</option><option value="delivery">Delivery</option>
-        </select>
-        <select onChange={e => setPagto(e.target.value)} className="border p-2 rounded-lg text-sm" value={pagto}>
-          <option value="dinheiro">Dinheiro</option><option value="pix">Pix</option><option value="cartao">Cartão</option>
-        </select>
-        <input placeholder="Obs..." value={observacao} onChange={e => setObservacao(e.target.value)} className="flex-1 border p-2 rounded-lg text-sm" />
-        <button onClick={() => registrar(produtoId)} className="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold text-sm">Registrar</button>
-      </div>
+      {/* --- INÍCIO DA ÁREA DO FORMULÁRIO CORRIGIDA --- */}
+<div className="bg-blue-50 p-4 rounded-xl shadow-sm border-2 border-blue-200 mb-4 shrink-0">
+  {/* Container principal: grid em 1 coluna no mobile, flex em linha no desktop (md:) */}
+  <div className="grid grid-cols-1 gap-3 md:flex md:items-center md:gap-2">
+    
+    {/* Campo Produto: w-full no mobile, w-1/4 no desktop */}
+    <select 
+      onChange={e => setProdutoId(e.target.value)} 
+      className="w-full md:w-1/4 border p-2 rounded-lg text-sm bg-white" 
+      value={produtoId}
+    >
+      <option value="">Produto...</option>
+      {produtosOrdenados.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}
+    </select>
+
+    {/* Container para Qtd e Tipo ficarem lado a lado no mobile, mas em linha no desktop */}
+    <div className="grid grid-cols-2 gap-2 md:flex md:gap-2 md:items-center">
+      {/* Campo Qtd: ocupa metade no mobile, w-16 no desktop */}
+      <input 
+        type="number" 
+        value={qtd} 
+        onChange={e => setQtd(e.target.value)} 
+        className="w-full md:w-16 border p-2 rounded-lg text-sm bg-white" 
+        placeholder="Qtd"
+      />
+      
+      {/* Campo Tipo: ocupa metade no mobile, automático no desktop */}
+      <select 
+        onChange={e => setModalidade(e.target.value)} 
+        className="w-full md:w-auto border p-2 rounded-lg text-sm bg-white" 
+        value={modalidade}
+      >
+        <option value="balcao">Balcão</option>
+        <option value="delivery">Delivery</option>
+      </select>
+    </div>
+
+    {/* Container para Pagto e Obs ficarem em fluxo normal (vertical no mobile, horizontal no desktop) */}
+    <div className="grid grid-cols-1 gap-3 md:flex md:flex-1 md:gap-2 md:items-center">
+      {/* Campo Pagto: w-full no mobile, automático no desktop */}
+      <select 
+        onChange={e => setPagto(e.target.value)} 
+        className="w-full md:w-auto border p-2 rounded-lg text-sm bg-white" 
+        value={pagto}
+      >
+        <option value="dinheiro">Dinheiro</option>
+        <option value="pix">Pix</option>
+        <option value="cartao">Cartão</option>
+      </select>
+      
+      {/* Campo Obs: w-full no mobile, flex-1 no desktop para ocupar o resto */}
+      <input 
+        placeholder="Obs..." 
+        value={observacao} 
+        onChange={e => setObservacao(e.target.value)} 
+        className="w-full md:flex-1 border p-2 rounded-lg text-sm bg-white" 
+      />
+    </div>
+
+    {/* Botão Registrar: w-full no mobile, w-auto no desktop */}
+    <button 
+      onClick={() => registrar(produtoId)} 
+      className="w-full md:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg font-bold text-sm shadow hover:bg-blue-700 transition-colors"
+    >
+      Registrar
+    </button>
+  </div>
+</div>
+{/* --- FIM DA ÁREA DO FORMULÁRIO CORRIGIDA --- */}
 
       <div className="flex gap-2 mb-4 shrink-0 text-sm">
         <input type="date" value={filtroData} onChange={e => setFiltroData(e.target.value)} className="border p-1 rounded-lg bg-gray-50" />
