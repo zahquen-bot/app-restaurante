@@ -99,7 +99,8 @@ const Movimento = () => {
   }, [movimentos, filtroProd, filtroTipo, filtroPagto, filtroData])
 
   return (
-    <div className="max-w-5xl mx-auto p-6 flex flex-col h-auto min-h-screen">
+    
+        <div className="max-w-5xl mx-auto p-6 flex flex-col h-[90vh] md:h-auto md:min-h-[80vh]">
       <div className="flex gap-2 mb-4 overflow-x-auto pb-2 shrink-0">
         {favoritos.map(f => (
           <button key={f.id} onClick={() => registrar(f.id, 1)} className="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow whitespace-nowrap">
