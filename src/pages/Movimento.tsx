@@ -8,10 +8,11 @@ const Movimento = () => {
   const [isAdmin, setIsAdmin] = useState(false)
   const [loading, setLoading] = useState(true)
   
-  const [isFormVisible, setIsFormVisible] = useState(true)
+  // AJUSTE: Estados de visibilidade (iniciando ocultos em mobile)
+  const [isFormVisible, setIsFormVisible] = useState(window.innerWidth > 768)
   const [isFilterVisible, setIsFilterVisible] = useState(false)
   const [isGridExpanded, setIsGridExpanded] = useState(false)
-  const [isResumoVisible, setIsResumoVisible] = useState(true)
+  const [isResumoVisible, setIsResumoVisible] = useState(window.innerWidth > 768)
   
   const [sortConfig, setSortConfig] = useState({ key: 'data', direction: 'desc' })
 
@@ -25,6 +26,22 @@ const Movimento = () => {
   const [filtroTipo, setFiltroTipo] = useState('')
   const [filtroPagto, setFiltroPagto] = useState('')
   const [filtroData, setFiltroData] = useState(new Date().toISOString().split('T')[0])
+
+  // Lógica de detecção de resize para manter responsividade
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setIsFormVisible(false)
+        setIsFilterVisible(false)
+        setIsResumoVisible(false)
+      } else {
+        setIsFormVisible(true)
+        setIsResumoVisible(true)
+      }
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const produtosOrdenados = useMemo(() => {
     return [...produtos].sort((a, b) => a.nome.localeCompare(b.nome))

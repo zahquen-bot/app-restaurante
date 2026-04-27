@@ -102,18 +102,21 @@ const Relatorios = () => {
         </div>
       </div>
 
-      <div className="bg-slate-800 p-8 rounded-2xl shadow-lg flex justify-between items-center text-white mb-6">
+      {/* CARD PRINCIPAL (Ajustado para responsividade) */}
+      <div className="bg-slate-800 p-6 md:p-8 rounded-2xl shadow-lg flex justify-between items-center text-white mb-6">
         <div>
-          <p className="text-slate-300 text-sm font-bold uppercase">Total do Período</p>
-          <h2 className="text-4xl font-black mb-1">R$ {relatorio.totalPeriodo.toFixed(2)}</h2>
-          <p className={`text-xs ${relatorio.variacaoFaturamento >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+          <p className="text-slate-300 text-[10px] md:text-sm font-bold uppercase">Total do Período</p>
+          {/* Ajustado: text-3xl em mobile, text-4xl em telas maiores */}
+          <h2 className="text-3xl md:text-4xl font-black mb-1">R$ {relatorio.totalPeriodo.toFixed(2)}</h2>
+          <p className={`text-[10px] md:text-xs ${relatorio.variacaoFaturamento >= 0 ? 'text-green-400' : 'text-red-400'}`}>
             {relatorio.temDadosOntem ? `↑ ${relatorio.variacaoFaturamento.toFixed(0)}% vs ontem` : '-- vs ontem'}
           </p>
         </div>
         <div className="text-right">
-          <p className="text-slate-300 text-sm font-bold uppercase">Ticket Médio</p>
-          <h2 className="text-2xl font-bold mb-1">R$ {relatorio.ticketMedio.toFixed(2)}</h2>
-          <p className={`text-xs ${relatorio.variacaoTicket >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+          <p className="text-slate-300 text-[10px] md:text-sm font-bold uppercase">Ticket Médio</p>
+          {/* Ajustado: text-xl em mobile, text-2xl em telas maiores */}
+          <h2 className="text-xl md:text-2xl font-bold mb-1">R$ {relatorio.ticketMedio.toFixed(2)}</h2>
+          <p className={`text-[10px] md:text-xs ${relatorio.variacaoTicket >= 0 ? 'text-green-400' : 'text-red-400'}`}>
             {relatorio.temDadosOntem ? `↑ R$ ${relatorio.variacaoTicket.toFixed(2)} vs ontem` : '-- vs ontem'}
           </p>
         </div>
