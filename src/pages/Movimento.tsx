@@ -7,6 +7,7 @@ const Movimento = () => {
   const [movimentos, setMovimentos] = useState<any[]>([])
   const [isAdmin, setIsAdmin] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [isRegistrando, setIsRegistrando] = useState(false)
   
   // AJUSTE: Estados de visibilidade (iniciando ocultos em mobile)
   const [isFormVisible, setIsFormVisible] = useState(window.innerWidth > 768)
@@ -87,13 +88,15 @@ const Movimento = () => {
 
   const registrar = async (id: string, quantidade: number = parseInt(qtd)) => {
     if (!id) return
+    setIsRegistrando(true)
     const { error } = await supabase.from('movimentacoes').insert([{
       produto_id: id, quantidade: quantidade, modalidade, forma_pagto: pagto, observacao
     }])
     if (!error) { 
       setQtd('1'); setObservacao(''); 
-      fetchDados(); 
+      await fetchDados(); 
     }
+    setIsRegistrando(false)
   }
 
   const atualizarMovimento = async (id: string, campo: string, valor: string) => {
@@ -126,6 +129,14 @@ const Movimento = () => {
   return (
     <div className={`mx-auto flex flex-col ${isGridExpanded ? 'fixed inset-0 z-50 bg-white p-4 max-w-full' : 'max-w-7xl h-[95vh] p-2'}`}>
       
+      {/* Aviso de processamento global */}
+      {isRegistrando && (
+  <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] bg-white border border-gray-200 text-gray-600 px-4 py-2 rounded-full shadow-md text-xs font-medium flex items-center gap-2">
+    <span className="animate-spin">⏳</span>
+    Registrando...
+  </div>
+)}
+
       {isGridExpanded && (
         <button 
           onClick={() => setIsGridExpanded(false)} 
@@ -136,10 +147,19 @@ const Movimento = () => {
       )}
       
       <div className="flex gap-2 mb-4 overflow-x-auto pb-2 shrink-0">
-        {favoritos.map(f => (
-          <button key={f.id} onClick={() => registrar(f.id, 1)} className="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow whitespace-nowrap">{f.nome}</button>
-        ))}
-      </div>
+  {favoritos.map(f => (
+    <button 
+      key={f.id} 
+      onClick={() => registrar(f.id, 1)} 
+      className="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md 
+                 hover:bg-orange-700 hover:shadow-lg hover:-translate-y-0.5 
+                 active:scale-90 active:bg-orange-800 
+                 transition-all duration-200 whitespace-nowrap"
+    >
+      {f.nome}
+    </button>
+  ))}
+</div>
 
       <div className="flex gap-4 mb-3 text-xs font-bold shrink-0 items-center">
         <button onClick={() => setIsFormVisible(!isFormVisible)} className="text-blue-600 hover:text-blue-800 underline">{isFormVisible ? '[-] Ocultar Form' : '[+] Exibir Form'}</button>
@@ -170,7 +190,19 @@ const Movimento = () => {
               </select>
               <input placeholder="Obs..." value={observacao} onChange={e => setObservacao(e.target.value)} className="w-full md:flex-1 border p-2 rounded-lg text-sm bg-white" />
             </div>
-            <button onClick={() => registrar(produtoId)} className="w-full md:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg font-bold text-sm shadow hover:bg-blue-700 transition-colors">Registrar</button>
+            <button 
+  onClick={() => registrar(produtoId)} 
+  disabled={isRegistrando}
+  className={`w-full md:w-auto px-6 py-2 rounded-lg font-bold text-sm shadow transition-colors ${
+    isRegistrando ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700'
+  }`}
+>
+  <div className="flex items-center justify-center gap-2">
+    {/* A div abaixo garante que o espaço esteja sempre reservado, mesmo sem a ampulheta */}
+    
+    Registrar
+  </div>
+</button>
           </div>
         </div>
       )}

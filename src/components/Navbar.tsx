@@ -48,21 +48,21 @@ const Navbar = () => {
         )}
       </div>
 
-      {/* E-mail e Sair */}
-      <div className="ml-auto flex items-center gap-3 pl-4 flex-shrink-0">
-        {userEmail && (
-          <span className="text-[10px] text-gray-400 font-medium hidden sm:block truncate max-w-[100px]">
-            {userEmail}
-          </span>
-        )}
-        
-        <button 
-          onClick={() => supabase.auth.signOut()} 
-          className="text-red-500 hover:text-red-700 text-sm font-semibold"
-        >
-          Sair
-        </button>
-      </div>
+      {/* E-mail exibido antes do botão Sair */}
+<div className="ml-auto flex items-center gap-4">
+  {userEmail && (
+    <span className="text-sm text-gray-600 font-medium hidden sm:block truncate max-w-[200px]">
+      {userEmail}
+    </span>
+  )}
+  
+  <button 
+    onClick={() => supabase.auth.signOut()} 
+    className="text-red-500 hover:text-red-700 text-sm font-semibold"
+  >
+    Sair
+  </button>
+</div>
     </nav>
   );
 };
