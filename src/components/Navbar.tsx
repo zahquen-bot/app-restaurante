@@ -39,6 +39,7 @@ const Navbar = () => {
         <>
           <NavLink to="/produtos" className={linkStyle}>Produtos</NavLink>
           <NavLink to="/usuarios" className={linkStyle}>Usuários</NavLink>
+          <NavLink to="/relatorios" className={linkStyle}>Relatórios</NavLink>
         </>
       )}
 

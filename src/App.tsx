@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Movimento from './pages/Movimento';
 import CadastroProdutos from './pages/CadastroProdutos';
 import CadastroUsuarios from './pages/CadastroUsuarios';
+import Relatorios from './pages/Relatorios';
 import Login from './pages/Login';
 import { useState, useEffect } from 'react';
 import { supabase } from './lib/supabaseClient';
@@ -26,11 +27,12 @@ const App = () => {
     <BrowserRouter>
       <div className="min-h-screen bg-slate-50">
         <Navbar />
-        <main className="p-4">
+        <main className="pt-0 px-4">
           <Routes>
             <Route path="/" element={<Movimento />} />
             <Route path="/produtos" element={<CadastroProdutos />} />
             <Route path="/usuarios" element={<CadastroUsuarios />} />
+            <Route path="/relatorios" element={<Relatorios />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
