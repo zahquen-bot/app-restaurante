@@ -139,14 +139,26 @@ const Relatorios = () => {
             <div className="flex-1 bg-orange-50 p-4 rounded-xl text-center"><p className="text-[10px] font-bold text-orange-600">DELIVERY</p><p className="text-2xl font-black">{relatorio.resumo.modalidades.delivery}</p></div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h3 className="font-bold text-gray-500 uppercase text-xs mb-4">Volume (Qtd)</h3>
-          <div className="grid grid-cols-2 gap-4">
-            {Object.entries(relatorio.resumo.produtos).map(([nome, qtd]: any) => (
-              <div key={nome} className="bg-gray-50 p-3 rounded-xl text-center"><p className="text-[9px] font-bold text-gray-500 uppercase">{nome}</p><p className="text-xl font-black">{qtd}</p></div>
-            ))}
-          </div>
+       
+       <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+  <h3 className="font-bold text-gray-500 uppercase text-xs mb-4">Volume (Qtd)</h3>
+  <div className="grid grid-cols-2 gap-4">
+    {Object.entries(relatorio.resumo.produtos).map(([nome, qtd]: any) => {
+      // Busca o preço do produto para calcular o valor total dessa linha
+      const produto = produtos.find(p => p.nome === nome);
+      const valorTotalItem = qtd * Number(produto?.preco_venda || 0);
+      
+      return (
+        <div key={nome} className="bg-gray-50 p-3 rounded-xl text-center">
+          <p className="text-[9px] font-bold text-gray-500 uppercase">{nome}</p>
+          <p className="text-xl font-black">{qtd}</p>
+          <p className="text-[10px] font-bold text-blue-600">R$ {valorTotalItem.toFixed(2)}</p>
         </div>
+      )
+    })}
+  </div>
+</div>
+
       </div>
     </div>
   )

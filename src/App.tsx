@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Movimento from './pages/Movimento';
+import ModoQuiosque from './pages/ModoQuiosque'; 
 import CadastroProdutos from './pages/CadastroProdutos';
 import CadastroUsuarios from './pages/CadastroUsuarios';
 import Relatorios from './pages/Relatorios';
@@ -30,6 +31,7 @@ const App = () => {
         <main className="pt-0 px-4">
           <Routes>
             <Route path="/" element={<Movimento />} />
+            <Route path="/quiosque" element={<ModoQuiosque />} />
             <Route path="/produtos" element={<CadastroProdutos />} />
             <Route path="/usuarios" element={<CadastroUsuarios />} />
             <Route path="/relatorios" element={<Relatorios />} />

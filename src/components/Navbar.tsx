@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom'; // 1. Adicionado useNavigate
 import { supabase } from '../lib/supabaseClient';
 
 const Navbar = () => {
+  const navigate = useNavigate(); // 2. Inicializado o hook
   const [isAdmin, setIsAdmin] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
@@ -32,12 +33,19 @@ const Navbar = () => {
     }`;
 
   return (
-    // Adicionado "w-full" e "overflow-x-auto" no container principal
     <nav className="w-full flex items-center bg-white shadow-sm border-b border-gray-100 px-2 sm:px-4">
       
-      {/* Container das abas com scroll lateral */}
+      {/* Container das abas */}
       <div className="flex items-center overflow-x-auto scrollbar-hide">
         <NavLink to="/" className={linkStyle}>Movimento</NavLink>
+        
+        {/* Botão de Atalho para o Modo Venda (Corrigido para usar navigate) */}
+        <button 
+          onClick={() => navigate('/quiosque')}
+          className="ml-2 px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[10px] font-bold uppercase hover:bg-blue-100 transition-colors whitespace-nowrap"
+        >
+          Modo Venda
+        </button>
 
         {isAdmin && (
           <>
@@ -48,21 +56,21 @@ const Navbar = () => {
         )}
       </div>
 
-      {/* E-mail exibido antes do botão Sair */}
-<div className="ml-auto flex items-center gap-4">
-  {userEmail && (
-    <span className="text-sm text-gray-600 font-medium hidden sm:block truncate max-w-[200px]">
-      {userEmail}
-    </span>
-  )}
-  
-  <button 
-    onClick={() => supabase.auth.signOut()} 
-    className="text-red-500 hover:text-red-700 text-sm font-semibold"
-  >
-    Sair
-  </button>
-</div>
+      {/* E-mail e botão Sair */}
+      <div className="ml-auto flex items-center gap-4 border-l border-gray-200 pl-4 flex-shrink-0">
+        {userEmail && (
+          <span className="text-sm text-gray-600 font-medium hidden sm:block truncate max-w-[200px]">
+            {userEmail}
+          </span>
+        )}
+        
+        <button 
+          onClick={() => supabase.auth.signOut()} 
+          className="text-red-500 hover:text-red-700 text-sm font-semibold"
+        >
+          Sair
+        </button>
+      </div>
     </nav>
   );
 };

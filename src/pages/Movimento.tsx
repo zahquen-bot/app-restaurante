@@ -279,11 +279,12 @@ const Movimento = () => {
 
       {isAdmin && isResumoVisible && (
         <div className="mt-8 flex flex-col gap-4">
+            {/* A div abaixo garante que o espaço esteja sempre reservado, mesmo sem a ampulheta 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-white p-2 rounded-xl shadow-sm border border-gray-200"><p className="text-gray-500 text-xs uppercase font-bold">Dinheiro</p><p className="text-2xl font-bold text-green-600">R$ {movimentosFiltrados.filter(m => m.forma_pagto === 'dinheiro').reduce((acc, m) => acc + (m.quantidade * (produtos.find(p => p.id === m.produto_id)?.preco_venda || 0)), 0).toFixed(2)}</p></div>
             <div className="bg-white p-2 rounded-xl shadow-sm border border-gray-200"><p className="text-gray-500 text-xs uppercase font-bold">PIX</p><p className="text-2xl font-bold text-blue-600">R$ {movimentosFiltrados.filter(m => m.forma_pagto === 'pix').reduce((acc, m) => acc + (m.quantidade * (produtos.find(p => p.id === m.produto_id)?.preco_venda || 0)), 0).toFixed(2)}</p></div>
             <div className="bg-white p-2 rounded-xl shadow-sm border border-gray-200"><p className="text-gray-500 text-xs uppercase font-bold">Cartão</p><p className="text-2xl font-bold text-purple-600">R$ {movimentosFiltrados.filter(m => m.forma_pagto === 'cartao').reduce((acc, m) => acc + (m.quantidade * (produtos.find(p => p.id === m.produto_id)?.preco_venda || 0)), 0).toFixed(2)}</p></div>
-          </div>
+          </div> */}
           <div className="bg-white p-2 rounded-xl shadow-sm border border-gray-200">
             <p className="text-gray-500 text-xs uppercase font-bold mb-3 tracking-wider">Totais por Produto</p>
             <div className="flex flex-wrap gap-x-8 gap-y-3 text-base text-gray-800">
