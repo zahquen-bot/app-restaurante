@@ -44,7 +44,7 @@ const Navbar = () => {
                 navigate('/login', { replace: true });
                 
                 // 3. (Opcional) Se você quiser garantir que tudo limpe mesmo:
-                window.location.reload(); 
+                //window.location.reload(); 
             }
          }
        );

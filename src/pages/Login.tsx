@@ -28,7 +28,7 @@ const Login: React.FC = () => {
 <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">       
     <div className="flex flex-col items-center justify-center mb-8">
   <h1 className="text-4xl font-extrabold text-blue-600 tracking-tight">
-    Zannah
+    LarZach
   </h1>
   <h2 className="text-2xl font-bold text-gray-800 tracking-tight mt-1">
     Controle de Vendas
