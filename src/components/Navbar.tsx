@@ -31,7 +31,7 @@ const Navbar = () => {
 
     Notiflix.Confirm.show(
       'Sair',
-      'Deseja realmente sair do sistema?',
+      'Confirma sair ?',
       'Sim',
       'Não',
         async () => {

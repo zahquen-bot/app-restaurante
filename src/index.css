@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Remove o ícone dos modais de observação do Notiflix */
+.notiflix-report .notiflix-report-icon {
+  display: none !important;
+}
+
+/* Ajusta o título para não ficar sem margem no topo */
+.notiflix-report .notiflix-report-title {
+  margin-top: 10px !important;
+}
