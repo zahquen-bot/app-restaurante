@@ -25,9 +25,15 @@ const Login: React.FC = () => {
   };
 
   return (
-<div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">        <h1 className="text-3xl font-extrabold text-gray-900 mb-8 tracking-tight text-center">
-      <span className="text-blue-600">Zanah - </span> Controle de Vendas
-    </h1>
+<div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">       
+    <div className="flex flex-col items-center justify-center mb-8">
+  <h1 className="text-4xl font-extrabold text-blue-600 tracking-tight">
+    Zannah
+  </h1>
+  <h2 className="text-2xl font-bold text-gray-800 tracking-tight mt-1">
+    Controle de Vendas
+  </h2>
+</div>
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-lg w-full max-w-sm border border-gray-200">
         <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Login</h1>
         
@@ -51,6 +57,9 @@ const Login: React.FC = () => {
           Entrar
         </button>
       </form>
+      <div className="fixed bottom-4 left-0 right-0 text-center text-gray-500 text-sm font-medium">
+    <p>Versão 1.0 - Copyright &copy; LarZach 2026</p>
+  </div>
     </div>
   )
 }
