@@ -43,7 +43,6 @@ const CadastroProdutos = () => {
     if (data) setProdutos(data)
   }
 
-  // Edição direta (para o favorito)
   const atualizarCampo = async (id: string, campo: string, valor: any) => {
     await supabase.from('produtos').update({ [campo]: valor }).eq('id', id)
     fetchProdutos()
@@ -77,28 +76,25 @@ const CadastroProdutos = () => {
   }
 
   const excluir = async (id: string) => {
-  // 1. Verifica se existe alguma movimentação para este produto
-  const { data: movimentacoes, error } = await supabase
-    .from('movimentacoes')
-    .select('id')
-    .eq('produto_id', id)
-    .limit(1);
+    const { data: movimentacoes, error } = await supabase
+      .from('movimentacoes')
+      .select('id')
+      .eq('produto_id', id)
+      .limit(1);
 
-  if (error) {
-    alert("Erro ao verificar vínculo com movimentações.");
-    return;
-  }
+    if (error) {
+      alert("Erro ao verificar vínculo com movimentações.");
+      return;
+    }
 
-  // 2. Se encontrar qualquer registro, bloqueia a exclusão
-  if (movimentacoes && movimentacoes.length > 0) {
-    alert("Não é possível excluir este produto pois ele já possui lançamentos em Movimentos!");
-    return;
-  }
+    if (movimentacoes && movimentacoes.length > 0) {
+      alert("Não é possível excluir este produto pois ele já possui lançamentos em Movimentos!");
+      return;
+    }
 
-  // 3. Se não houver vínculos, exclui normalmente
-  await supabase.from('produtos').delete().eq('id', id);
-  fetchProdutos();
-};
+    await supabase.from('produtos').delete().eq('id', id);
+    fetchProdutos();
+  };
 
   if (loading) return <div className="flex justify-center items-center h-screen">Carregando...</div>
   if (!isAdmin) return null
@@ -131,38 +127,43 @@ const CadastroProdutos = () => {
         </div>
       </div>
 
+      {/* Tabela com scroll horizontal para mobile */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-gray-50 text-gray-500 text-sm uppercase">
-            <tr><th className="p-5">Produto</th><th className="p-5">Detalhes</th><th className="p-5">Preço</th><th className="p-5 text-center">Fav</th><th className="p-5 text-right">Ações</th></tr>
-          </thead>
-          <tbody>
-  {produtos.map(p => (
-    <tr key={p.id} className="border-t hover:bg-gray-50 text-gray-700">
-      <td className="p-5">{p.nome}</td>
-      <td className="p-5 text-sm text-gray-500">{p.marca} {p.embalagem ? `(${p.embalagem})` : ''}</td>
-      <td className="p-5">R$ {Number(p.preco_venda).toFixed(2)}</td>
-      <td className="p-5 text-center cursor-pointer text-xl" onClick={() => atualizarCampo(p.id, 'favorito', !p.favorito)}>
-        {p.favorito ? '★' : '☆'}
-      </td>
-      <td className="p-5 text-right flex justify-end gap-3">
-  <button 
-    onClick={() => prepararEdicao(p)} 
-    className="px-3 py-1 bg-blue-50 text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-100 font-bold text-sm transition-colors"
-  >
-    Editar
-  </button>
-  <button 
-    onClick={() => excluir(p.id)} 
-    className="px-3 py-1 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100 font-bold text-sm transition-colors"
-  >
-    Excluir
-  </button>
-</td>
-    </tr>
-  ))}
-</tbody>
-        </table>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left min-w-[600px]">
+            <thead className="bg-gray-50 text-gray-500 text-sm uppercase">
+              <tr>
+                <th className="p-5">Produto</th>
+                <th className="p-5">Detalhes</th>
+                <th className="p-5">Preço</th>
+                <th className="p-5 text-center">Fav</th>
+                <th className="p-5 text-right">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {produtos.map(p => (
+                <tr key={p.id} className="border-t hover:bg-gray-50 text-gray-700">
+                  <td className="p-5">{p.nome}</td>
+                  <td className="p-5 text-sm text-gray-500">{p.marca} {p.embalagem ? `(${p.embalagem})` : ''}</td>
+                  <td className="p-5">R$ {Number(p.preco_venda).toFixed(2)}</td>
+                  <td className="p-5 text-center cursor-pointer text-xl" onClick={() => atualizarCampo(p.id, 'favorito', !p.favorito)}>
+                    {p.favorito ? '★' : '☆'}
+                  </td>
+                  <td className="p-5 text-right">
+                    <div className="flex justify-end gap-2">
+                      <button onClick={() => prepararEdicao(p)} className="px-3 py-1 bg-blue-50 text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-100 font-bold text-sm transition-colors whitespace-nowrap">
+                        Editar
+                      </button>
+                      <button onClick={() => excluir(p.id)} className="px-3 py-1 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100 font-bold text-sm transition-colors whitespace-nowrap">
+                        Excluir
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   )

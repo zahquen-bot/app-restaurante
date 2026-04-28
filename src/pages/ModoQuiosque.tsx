@@ -36,7 +36,6 @@ const ModoQuiosque = () => {
     setIsRegistrando(false)
   }
 
-  // Nova função para deletar o último registro do produto
   const remover = async (id: string) => {
     const ultimo = movimentos
       .filter(m => m.produto_id === id)
@@ -51,7 +50,7 @@ const ModoQuiosque = () => {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-60px)] bg-slate-200 overflow-hidden">
+    <div className="flex flex-col h-screen bg-slate-200 overflow-hidden">
       {isRegistrando && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[100] bg-slate-800 text-white px-4 py-2 rounded-full shadow-lg text-xs font-medium flex items-center gap-2">
           <span className="animate-spin">⏳</span> Registrando...
@@ -65,35 +64,30 @@ const ModoQuiosque = () => {
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 min-h-0">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pb-6">
-          {produtos.map(p => (
-            // Card agora é uma div (não é mais um botão clicável)
-            <div key={p.id} className="bg-slate-50 p-4 rounded-2xl shadow-sm border border-slate-300 flex flex-col items-center gap-2 relative">
-              
-              {/* Botões de controle no topo */}
-              <div className="flex gap-2 w-full justify-between mb-2">
-                <button onClick={() => remover(p.id)} className="w-10 h-10 bg-red-100 text-red-600 rounded-lg font-bold text-xl active:scale-90 transition-all border border-red-200">-</button>
-                <button onClick={() => registrar(p.id)} className="w-10 h-10 bg-blue-600 text-white rounded-lg font-bold text-xl active:scale-90 transition-all">+</button>
-              </div>
-
-              <span className="text-base font-medium text-slate-800 text-center mt-2">{p.nome}</span>
-              <span className="text-lg font-bold text-blue-800">R$ {Number(p.preco_venda).toFixed(2)}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="bg-slate-100 p-4 border-t border-slate-300 shadow-md shrink-0">
-        <h3 className="text-[11px] text-slate-500 uppercase tracking-widest mb-3 font-bold">Vendas Hoje</h3>
-        <div className="flex flex-wrap gap-3">
+      <div className="flex-1 overflow-y-auto px-4 pb-6 min-h-0">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {produtos.map(p => {
             const qtdTotal = movimentos.filter(m => m.produto_id === p.id).reduce((acc, m) => acc + (Number(m.quantidade) || 0), 0);
-            if (qtdTotal === 0) return null;
+            const valorTotal = qtdTotal * Number(p.preco_venda || 0);
+
             return (
-              <div key={p.id} className="bg-slate-200 px-4 py-2 rounded-lg border border-slate-300">
-                <span className="text-sm font-medium text-slate-700">{p.nome}: </span>
-                <span className="text-2xl font-bold text-slate-950">{qtdTotal}</span>
+              <div key={p.id} className="bg-slate-50 p-4 rounded-2xl shadow-sm border border-slate-300 flex flex-col items-center gap-1 relative">
+                
+                <div className="flex gap-2 w-full justify-between mb-2">
+                  <button onClick={() => remover(p.id)} className="w-10 h-10 bg-red-100 text-red-600 rounded-lg font-bold text-xl active:scale-90 transition-all border border-red-200">-</button>
+                  <button onClick={() => registrar(p.id)} className="w-10 h-10 bg-blue-600 text-white rounded-lg font-bold text-xl active:scale-90 transition-all">+</button>
+                </div>
+
+                <span className="text-2xl font-bold text-slate-800 text-center">{p.nome}</span>
+                <span className="text-xs text-slate-500 font-medium">Unit: R$ {Number(p.preco_venda).toFixed(2)}</span>
+                
+                {/* Área de Totais do Card - Ajustada */}
+              <div className="mt-2 bg-slate-100 w-full rounded-lg p-2 text-center border border-slate-200">
+                <p className="text-[10px] text-slate-500 uppercase font-bold">Vendido Hoje</p>
+                <p className="text-xl font-black text-slate-900">{qtdTotal}</p>
+                {/* Aumentado o tamanho e peso da fonte abaixo */}
+                <p className="text-sm font-extrabold text-blue-700">R$ {valorTotal.toFixed(2)}</p>
+              </div>
               </div>
             )
           })}

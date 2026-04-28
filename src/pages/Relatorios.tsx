@@ -135,8 +135,8 @@ const Relatorios = () => {
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
           <h3 className="font-bold text-gray-500 uppercase text-xs mb-4">Modalidade</h3>
           <div className="flex gap-4">
-            <div className="flex-1 bg-green-50 p-4 rounded-xl text-center"><p className="text-[10px] font-bold text-green-600">BALCÃO</p><p className="text-2xl font-black">{relatorio.resumo.modalidades.balcao}</p></div>
-            <div className="flex-1 bg-orange-50 p-4 rounded-xl text-center"><p className="text-[10px] font-bold text-orange-600">DELIVERY</p><p className="text-2xl font-black">{relatorio.resumo.modalidades.delivery}</p></div>
+            <div className="flex-1 bg-green-50 p-4 rounded-xl text-center"><p className="text-[12px] font-bold text-green-600">BALCÃO</p><p className="text-2xl font-black">{relatorio.resumo.modalidades.balcao}</p></div>
+            <div className="flex-1 bg-orange-50 p-4 rounded-xl text-center"><p className="text-[12px] font-bold text-orange-600">DELIVERY</p><p className="text-2xl font-black">{relatorio.resumo.modalidades.delivery}</p></div>
           </div>
         </div>
        
@@ -150,9 +150,9 @@ const Relatorios = () => {
       
       return (
         <div key={nome} className="bg-gray-50 p-3 rounded-xl text-center">
-          <p className="text-[9px] font-bold text-gray-500 uppercase">{nome}</p>
+          <p className="text-[12px] font-bold text-black-500 uppercase">{nome}</p>
           <p className="text-xl font-black">{qtd}</p>
-          <p className="text-[10px] font-bold text-blue-600">R$ {valorTotalItem.toFixed(2)}</p>
+          <p className="text-[14px] font-bold text-blue-600">R$ {valorTotalItem.toFixed(2)}</p>
         </div>
       )
     })}

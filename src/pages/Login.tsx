@@ -40,6 +40,7 @@ const Login: React.FC = () => {
         <input
           type="email"
           placeholder="Email"
+          autoComplete="username"
           value={email}
           onChange={e => setEmail(e.target.value)}
           className="w-full p-3 mb-4 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -48,6 +49,7 @@ const Login: React.FC = () => {
         <input
           type="password"
           placeholder="Senha"
+          autoComplete="current-password"
           value={password}
           onChange={e => setPassword(e.target.value)}
           className="w-full p-3 mb-6 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
