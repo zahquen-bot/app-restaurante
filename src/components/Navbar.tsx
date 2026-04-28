@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom'; // 1. Adicionado useNavigate
 import { supabase } from '../lib/supabaseClient';
+import Notiflix from 'notiflix';
 
 const Navbar = () => {
   const navigate = useNavigate(); // 2. Inicializado o hook
@@ -24,6 +25,30 @@ const Navbar = () => {
     };
     checkRole();
   }, []);
+
+  const handleLogout = async () => {
+
+
+    Notiflix.Confirm.show(
+      'Sair',
+      'Deseja realmente sair do sistema?',
+      'Sim',
+      'Não',
+        async () => {
+            // Código caso ele clique em "Sim"
+            // 1. Executa o logout no Supabase
+            const { error } = await supabase.auth.signOut();
+    
+            if (!error) {
+                // 2. Redireciona via React Router (limpo e sem recarregar a página toda)
+                navigate('/login', { replace: true });
+                
+                // 3. (Opcional) Se você quiser garantir que tudo limpe mesmo:
+                window.location.reload(); 
+            }
+         }
+       );
+    };
 
   const linkStyle = ({ isActive }: { isActive: boolean }) =>
     `px-3 py-2 border-b-2 transition-all duration-200 whitespace-nowrap ${
@@ -65,7 +90,7 @@ const Navbar = () => {
         )}
         
         <button 
-          onClick={() => supabase.auth.signOut()} 
+          onClick={handleLogout} 
           className="text-red-500 hover:text-red-700 text-sm font-semibold"
         >
           Sair

@@ -25,7 +25,9 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100">
+<div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">        <h1 className="text-3xl font-extrabold text-gray-900 mb-8 tracking-tight text-center">
+      <span className="text-blue-600">Zanah - </span> Controle de Vendas
+    </h1>
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-lg w-full max-w-sm border border-gray-200">
         <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Login</h1>
         
