@@ -53,11 +53,20 @@ const Relatorios = () => {
       const preco = Number(p?.preco_venda || 0)
       const valor = m.quantidade * preco
       acc.total += valor
-      acc.pagtos[m.forma_pagto] = (acc.pagtos[m.forma_pagto] || 0) + valor
-      acc.modalidades[m.modalidade] = (acc.modalidades[m.modalidade] || 0) + 1
-      acc.produtos[p?.nome || 'Outros'] = (acc.produtos[p?.nome || 'Outros'] || 0) + m.quantidade
+      acc.pagtos[m.forma_pagto] = { 
+        qtd: (acc.pagtos[m.forma_pagto]?.qtd || 0) + 1, 
+        valor: (acc.pagtos[m.forma_pagto]?.valor || 0) + valor 
+      };
+      acc.modalidades[m.modalidade] = {
+        qtd: (acc.modalidades[m.modalidade]?.qtd || 0) + 1,
+        valor: (acc.modalidades[m.modalidade]?.valor || 0) + valor
+      }
+      acc.produtos[p?.nome || 'Outros'] = {
+        qtd: (acc.produtos[p?.nome || 'Outros']?.qtd || 0) + m.quantidade,
+        valor: (acc.produtos[p?.nome || 'Outros']?.valor || 0) + valor
+      }
       return acc
-    }, { total: 0, pagtos: { dinheiro: 0, pix: 0, cartao: 0 }, modalidades: { balcao: 0, delivery: 0 }, produtos: {} })
+    }, { total: 0, pagtos: {}, modalidades: {}, produtos: {} })
 
     const filtrados = movimentos.filter(m => {
       const d = new Date(m.data).toISOString().split('T')[0]
@@ -67,17 +76,27 @@ const Relatorios = () => {
     const resumo = calcularResumo(filtrados);
     const dadosOntem = calcularResumo(filtrarPorData(ontem));
     
+    // Cálculos de Performance
     const totalHoje = resumo.total;
     const totalOntem = dadosOntem.total;
     const variacaoFaturamento = totalOntem > 0 ? ((totalHoje - totalOntem) / totalOntem) * 100 : 0;
     
-    const ticketHoje = filtrados.length > 0 ? (resumo.total / filtrados.length) : 0
-    const ticketOntem = dadosOntem.total > 0 ? (dadosOntem.total / filtrarPorData(ontem).length) : 0
+    const ticketHoje = filtrados.length > 0 ? (resumo.total / filtrados.length) : 0;
+    const ticketOntem = dadosOntem.total > 0 ? (dadosOntem.total / filtrarPorData(ontem).length) : 0;
     const variacaoTicket = ticketOntem > 0 ? (ticketHoje - ticketOntem) : ticketHoje;
 
+    const receitaProdutos = Object.entries(resumo.produtos)
+      .map(([nome, dados]: any) => ({ nome, ...dados }))
+      .sort((a, b) => b.valor - a.valor);
+
     return { 
-        resumo, totalPeriodo: resumo.total, ticketMedio: ticketHoje, totalPedidos: filtrados.length,
-        variacaoFaturamento, variacaoTicket, temDadosOntem: totalOntem > 0 
+        resumo, 
+        totalPeriodo: resumo.total, 
+        ticketMedio: ticketHoje, 
+        variacaoFaturamento,
+        variacaoTicket,
+        temDadosOntem: totalOntem > 0, 
+        receitaProdutos 
     }
   }, [movimentos, produtos, dataInicio, dataFim, modoPeriodo])
 
@@ -102,63 +121,73 @@ const Relatorios = () => {
         </div>
       </div>
 
-      {/* CARD PRINCIPAL (Ajustado para responsividade) */}
-      <div className="bg-slate-800 p-6 md:p-8 rounded-2xl shadow-lg flex justify-between items-center text-white mb-6">
-        <div>
-          <p className="text-slate-300 text-[10px] md:text-sm font-bold uppercase">Total do Período</p>
-          {/* Ajustado: text-3xl em mobile, text-4xl em telas maiores */}
-          <h2 className="text-3xl md:text-4xl font-black mb-1">R$ {relatorio.totalPeriodo.toFixed(2)}</h2>
-          <p className={`text-[10px] md:text-xs ${relatorio.variacaoFaturamento >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-            {relatorio.temDadosOntem ? `↑ ${relatorio.variacaoFaturamento.toFixed(0)}% vs ontem` : '-- vs ontem'}
-          </p>
-        </div>
-        <div className="text-right">
-          <p className="text-slate-300 text-[10px] md:text-sm font-bold uppercase">Ticket Médio</p>
-          {/* Ajustado: text-xl em mobile, text-2xl em telas maiores */}
-          <h2 className="text-xl md:text-2xl font-bold mb-1">R$ {relatorio.ticketMedio.toFixed(2)}</h2>
-          <p className={`text-[10px] md:text-xs ${relatorio.variacaoTicket >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-            {relatorio.temDadosOntem ? `↑ R$ ${relatorio.variacaoTicket.toFixed(2)} vs ontem` : '-- vs ontem'}
-          </p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h3 className="font-bold text-gray-500 uppercase text-xs mb-4">Receita por Pagamento</h3>
-          {Object.entries(relatorio.resumo.pagtos).map(([metodo, valor]: any) => (
-            <div key={metodo} className="mb-3">
-              <div className="flex justify-between text-sm mb-1"><span className="capitalize">{metodo}</span><span className="font-bold">R$ {valor.toFixed(2)}</span></div>
-              <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden"><div className="bg-blue-600 h-full" style={{ width: `${relatorio.totalPeriodo > 0 ? (valor / relatorio.totalPeriodo) * 100 : 0}%` }}></div></div>
-            </div>
-          ))}
-        </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h3 className="font-bold text-gray-500 uppercase text-xs mb-4">Modalidade</h3>
-          <div className="flex gap-4">
-            <div className="flex-1 bg-green-50 p-4 rounded-xl text-center"><p className="text-[12px] font-bold text-green-600">BALCÃO</p><p className="text-2xl font-black">{relatorio.resumo.modalidades.balcao}</p></div>
-            <div className="flex-1 bg-orange-50 p-4 rounded-xl text-center"><p className="text-[12px] font-bold text-orange-600">DELIVERY</p><p className="text-2xl font-black">{relatorio.resumo.modalidades.delivery}</p></div>
-          </div>
-        </div>
-       
-       <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-  <h3 className="font-bold text-gray-500 uppercase text-xs mb-4">Volume (Qtd)</h3>
-  <div className="grid grid-cols-2 gap-4">
-    {Object.entries(relatorio.resumo.produtos).map(([nome, qtd]: any) => {
-      // Busca o preço do produto para calcular o valor total dessa linha
-      const produto = produtos.find(p => p.nome === nome);
-      const valorTotalItem = qtd * Number(produto?.preco_venda || 0);
-      
-      return (
-        <div key={nome} className="bg-gray-50 p-3 rounded-xl text-center">
-          <p className="text-[12px] font-bold text-black-500 uppercase">{nome}</p>
-          <p className="text-xl font-black">{qtd}</p>
-          <p className="text-[14px] font-bold text-blue-600">R$ {valorTotalItem.toFixed(2)}</p>
-        </div>
-      )
-    })}
+      {/* CARD PRINCIPAL (Agora com a variação do Ticket Médio incluída) */}
+<div className="bg-slate-800 p-6 md:p-8 rounded-2xl shadow-lg flex justify-between items-center text-white mb-6">
+  <div>
+    <p className="text-slate-300 text-[10px] md:text-sm font-bold uppercase">Total do Período</p>
+    <h2 className="text-3xl md:text-4xl font-black mb-1">R$ {relatorio.totalPeriodo.toFixed(2)}</h2>
+    <p className={`text-[10px] md:text-xs ${relatorio.variacaoFaturamento >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+      {relatorio.temDadosOntem ? `↑ ${relatorio.variacaoFaturamento.toFixed(0)}% vs ontem` : '-- vs ontem'}
+    </p>
+  </div>
+  <div className="text-right">
+    <p className="text-slate-300 text-[10px] md:text-sm font-bold uppercase">Ticket Médio</p>
+    <h2 className="text-xl md:text-2xl font-bold mb-1">R$ {relatorio.ticketMedio.toFixed(2)}</h2>
+    {/* AQUI ESTÁ O INDICADOR COMPARADOR QUE FALTAVA */}
+    <p className={`text-[10px] md:text-xs ${relatorio.variacaoTicket >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+      {relatorio.temDadosOntem ? `↑ R$ ${relatorio.variacaoTicket.toFixed(2)} vs ontem` : '-- vs ontem'}
+    </p>
   </div>
 </div>
 
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Receita por Pagamento */}
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+          <h3 className="font-bold text-gray-500 uppercase text-xs mb-4">Receita por Pagamento</h3>
+          {Object.entries(relatorio.resumo.pagtos).map(([metodo, d]: any) => (
+            <div key={metodo} className="mb-4">
+              <div className="flex justify-between text-xs font-bold mb-1 uppercase">
+                <span>{metodo} ({d.qtd})</span>
+                <span>R$ {d.valor.toFixed(2)}</span>
+              </div>
+              <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                <div className="bg-blue-600 h-full rounded-full" style={{ width: `${relatorio.totalPeriodo > 0 ? (d.valor / relatorio.totalPeriodo) * 100 : 0}%` }}></div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Modalidade */}
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+          <h3 className="font-bold text-gray-500 uppercase text-xs mb-4">Receita por Modalidade</h3>
+          {Object.entries(relatorio.resumo.modalidades).map(([mod, d]: any) => (
+            <div key={mod} className="mb-4">
+              <div className="flex justify-between text-xs font-bold mb-1 uppercase">
+                <span>{mod} ({d.qtd})</span>
+                <span>R$ {d.valor.toFixed(2)}</span>
+              </div>
+              <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                <div className="bg-green-500 h-full rounded-full" style={{ width: `${relatorio.totalPeriodo > 0 ? (d.valor / relatorio.totalPeriodo) * 100 : 0}%` }}></div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Receita por Produto */}
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+          <h3 className="font-bold text-gray-500 uppercase text-xs mb-4">Receita por Produto</h3>
+          {relatorio.receitaProdutos.slice(0, 6).map((p: any) => (
+            <div key={p.nome} className="mb-4">
+              <div className="flex justify-between text-xs font-bold mb-1">
+                <span>{p.nome} ({p.qtd})</span>
+                <span>R$ {p.valor.toFixed(2)}</span>
+              </div>
+              <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                <div className="bg-blue-600 h-full rounded-full" style={{ width: `${relatorio.totalPeriodo > 0 ? (p.valor / relatorio.totalPeriodo) * 100 : 0}%` }}></div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )

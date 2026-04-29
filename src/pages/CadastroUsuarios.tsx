@@ -129,7 +129,7 @@ const CadastroUsuarios = () => {
               onClick={cadastrarUsuario} 
               className="bg-blue-600 text-white px-8 py-2.5 rounded-full font-semibold shadow-lg hover:bg-blue-700 transition-all"
             >
-              Cadastrar Usuário
+              Cadastrar
             </button>
           </div>
         </div>
